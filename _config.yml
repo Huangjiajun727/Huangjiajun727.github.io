@@ -1,37 +1,88 @@
-title: Hello, world! I'm David Freeman
-description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-permalink: ':title/'
-baseurl: "/flexible-jekyll" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-site-twitter: #if your site has a twitter account, enter it here
+#######################
+# Theme Customization #
+#######################
 
-# Author Settings
-author: David Freeman # add your name
-author-img: david-freeman.jpg # add your photo
-about-author: I am a web developer focusing on front-end development. Always hungry to keep learning. # add description
-social-twitter: # add your Twitter handle
-social-facebook: # add your Facebook handle
-social-github: artemsheludko # add your Github handle
-social-linkedin: # add your Linkedin handle
-social-email: # add your Email address
+title: J. Bravo                             # used in <title> tag & site header
+author: Johnny Bravo                        # used in a <meta> tag & /feed.xml
+description: >                              # used in a <meta> tag & /feed.xml
+  Hello 911 emergency, there's a handsome guy in my house!
+  Oh wait a second, cancel that. It's only me.
+slogan: Showtime!                           # used in site header, beside title
+avatar: /i/avatar.png                       # used as portrait in site header
+banner: /i/mountains.svg                    # used as background in site header
+url: http://solana.ryanlue.com              # used by plugins to generate feed.xml and sitemap.xml
+baseurl: ''                                 # prepended to all absolute filepaths
+repo: https://github.com/rlue/jekyll-solana # used in footer
 
-# Disqus
-discus-identifier: mr-brown # add your discus identifier
+# Objects listed here will appear in the main nav menu.
+# Exceeding four items may cause problems on the desktop (>900px wide) layout.
+nav_menu:
+  - name: Posts
+    url: /
+    icon: /i/icons.svg#posts # icons should be 24x24 px.
+  - name: Projects
+    url: /projects
+    icon: /i/icons.svg#portfolio
+  - name: GitHub
+    url: https://github.com/rlue/
+    icon: /i/icons.svg#github
+    outbound: true      # this key sets a link to open in a new window.
+  - name: Contact
+    scheme: mailto      # these keys enable email obfuscation.
+    handle: hello       # you know, to protect you from bots. (handle and domain
+    domain: github.com  # are separated in case bots crawl GitHub repos, too.)
+    icon: /i/icons.svg#email
 
-# Tracker
-analytics: # Google Analytics
+# Objects listed here will appear on the /projects.html page.
+projects:
+  - title: Solana
+    teaser: A responsive blog template written in Sass and vanilla JavaScript.
+    url: https://github.com/rlue/jekyll-solana
+    role: Creator
+    category: Frontend Dev
+  - title: Cortana
+    teaser: A talking robot. Now available on Google Play?
+    url: https://play.google.com/store/apps/details?id=com.microsoft.cortana
+    role: Core Team
+    category: NLP
+  - title: Rihanna
+    teaser: Possibly another robot. Also available on Google Play.
+    url: https://play.google.com/store/music/artist/Rihanna?id=Arcw2m2ih45qntv3fufub25tyhu
+    role: Contributor
+    category: Algorithmic Composition
 
-# Build Settings
-markdown: kramdown
+#################
+# Site Settings #
+#################
+
+incremental: true
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE
+  - README.md
+  - TODO.md
+
+permalink: /:collection/:path
+
+collections:
+  category: { output: true }
+  tag:      { output: true }
+
+defaults:
+  - scope:  { type:   posts    }
+    values: { layout: post     }
+  - scope:  { type:   tag      }
+    values: { layout: listing  }
+  - scope:  { type:   category }
+    values: { layout: listing  }
+
+sass:
+  sass_dir: _assets/css
+
 plugins:
-  - jekyll-sitemap
   - jekyll-paginate
-  - jemoji
+  - jekyll-feed
+  - jekyll-sitemap
 
-paginate: 8
-paginate_path: "/page/:num"
-
-exclude: ["node_modules", "gulpfile.js", "package.json", "yarn.lock"]
+paginate: 10

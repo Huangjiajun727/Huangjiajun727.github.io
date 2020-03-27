@@ -1,38 +1,44 @@
 ---
-layout: main
+layout: default
 ---
-<article class="article-page">
-  <div class="page-content">
-    {% if page.img %}
-    <div class="page-cover-image">
-      <figure>
-        <img class="page-image" src={{ "/assets/img/" | prepend: site.baseurl | append : page.img}} alt="{{page.title}}">
-        {% if page.fig-caption %}
-          <figcaption>{{page.fig-caption}}</figcaption>
-        {% endif %}
-      </figure>
-    </div> <!-- End Page Cover Image -->
+
+{% capture pretty_date %}
+  {% assign day = page.date | date: "%-d"  %}
+  {{ page.date | date: "%B" }}
+  {% case day %}{% when '1' or '21' or '31' %}{{ day }}st{% when '2' or '22' %}{{ day }}nd{% when '3' or '23' %}{{ day }}rd{% else %}{{ day }}th{% endcase %}{{ page.date | date: ", %Y" }}
+{% endcapture %}
+
+<main class="post" role="main">
+  <div class="post__head">
+    <h1 class="post__title"> {{ page.title }} </h1>
+    <time class="post__date" datetime="{{ page.date | date_to_xmlschema }}"> {{ pretty_date }} </time>
+    <div class="post__labels">
+    {% if page.category %} <a href="{{ site.baseurl }}/category/{{ page.category }}" class="post__category">{{ page.category }}</a>{% endif %}
+    {% if page.tags %}{% for tag in page.tags %} <a href="{{ site.baseurl }}/tag/{{ tag }}" class="post__tag">{{ tag }}</a>{% endfor %}{% endif %}
+    </div>
+  </div>
+  <div class="post__body">
+    {{ content }}
+  </div>
+</main>
+
+{% comment %}
+{% endcomment %}
+
+{% if page.reddit_post %}
+  <section class="comments">
+    {% if page.featured_comments %}
+      {% assign call_to_action = "Join the Discussion" %}
+
+      <h2>Featured Comments</h2>
+      {% for comment in page.featured_comments %}
+      <div class="reddit-embed" data-embed-media="www.redditmedia.com" data-embed-parent="{% if comment.context %}true{% else %}false{% endif %}" data-embed-live="{% if comment.freeze %}false{% else %}true{% endif %}"><a href="{{ comment.url }}"></a></div>
+      {% endfor %}
+
+      <script async src="https://www.redditstatic.com/comment-embed.js"></script>
     {% else %}
+      {% assign call_to_action = "Comments" %}
     {% endif %}
-    <div class="wrap-content">
-      <header class="header-page">
-        <h1 class="page-title">{{page.title}}</h1>
-        <div class="page-date"><span>{{page.date | date: '%Y, %b %d'}}&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
-      </header>
-      {{content | markdownify}}
-      <div class="page-footer">
-        <div class="page-share">
-          <a href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ site.url }}{{ page.url }}" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
-          <a href="https://facebook.com/sharer.php?u={{ site.url }}{{ page.url }}" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
-          <a href="https://plus.google.com/share?url={{ site.url }}{{ page.url }}" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
-        </div>
-        <div class="page-tag">
-          {% for tag in page.tags %}
-            <a href="{{site.baseurl}}/tags#{{tag}}" class="tag">&#35; {{ tag }}</a>
-          {% endfor %}
-        </div>
-      </div>
-      {% include disqus.html %}
-    </div> <!-- End Wrap Content -->
-  </div> <!-- End Page Content -->
-</article> <!-- End Article Page -->
+    <a href="{{ page.reddit_post }}" target="_blank" class="comments__cta">{{ call_to_action }}</a>
+  </section>
+{% endif %}
